@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+name: clients-api
+spec:
+template:
+spec:
+containers:
+- name: clients-api
+image: ghcr.io/my-org/clients-api:{{ IMAGE_TAG }}
