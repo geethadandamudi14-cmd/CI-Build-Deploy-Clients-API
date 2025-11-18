@@ -1,0 +1,15 @@
+resources:
+- namespace.yaml
+- ingress-controller.yaml
+- mongo-service.yaml
+- mongo-statefulset.yaml
+- clients-service.yaml
+- clients-deployment.yaml
+- cert-manager-issuers.yaml
+- certificate.yaml
+- clients-ingress.yaml
+namespace: clients-api
+
+
+configMapGenerator: []
+secretGenerator: []
