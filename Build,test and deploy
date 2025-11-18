@@ -1,0 +1,55 @@
+name: Build, Test, and Deploy
+
+
+on:
+push:
+branches: [ main ]
+pull_request:
+branches: [ main ]
+
+
+jobs:
+build-and-test:
+runs-on: ubuntu-latest
+outputs:
+image: ${{ steps.build.outputs.image }}
+steps:
+- name: Checkout
+uses: actions/checkout@v4
+
+
+- name: Set up QEMU
+uses: docker/setup-qemu-action@v2
+
+
+- name: Set up Docker Buildx
+uses: docker/setup-buildx-action@v3
+
+
+- name: Login to registry
+uses: docker/login-action@v2
+with:
+registry: ${{ secrets.REGISTRY_HOST }}
+username: ${{ secrets.REGISTRY_USERNAME }}
+password: ${{ secrets.REGISTRY_TOKEN }}
+
+
+- name: Build and push image
+id: build
+uses: docker/build-push-action@v4
+with:
+context: .
+push: true
+tags: ${{ secrets.REGISTRY }}/clients-api:${{ github.sha }}
+
+
+- name: Run unit tests
+run: |
+npm ci
+npm test
+
+
+deploy:
+needs: build-and-test
+runs-on: ubuntu-latest
+if: github.ref == 'refs/heads/
